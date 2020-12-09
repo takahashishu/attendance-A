@@ -3,9 +3,10 @@ class SessionsController < ApplicationController
   end
   
   def create
-    user = User.find_by(email: params[:session][:email].downcase) #downcaseメソッドは大文字を小文字として判定する
-    if user && user.authenticate(params[:session][:password]) #&&は取得したユーザーオブジェクトが有効か判定するために使用する
+    user = User.find_by(email: params[:session][:email].downcase) # downcaseメソッドは大文字を小文字として判定する
+    if user && user.authenticate(params[:session][:password]) # &&は取得したユーザーオブジェクトが有効か判定するために使用する
       log_in user
+      params[:session][:remember_me] == '1' ? remember(user) : forget(user)
       redirect_to user
     else
       flash.now[:danger] = "認証に失敗しました。"
