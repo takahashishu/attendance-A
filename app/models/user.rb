@@ -8,8 +8,8 @@ class User < ApplicationRecord
   validates :email, presence: true, length: { maximum: 100 },
                     format: { with: VALID_EMAIL_REGEX },
                     uniqueness: true
-  has_secure_password
-  validates :password, presence: true, length: { minimum: 6 }
+  has_secure_password # railsのメソッド。モデルにpassword_digestというカラムを含めることで使用可能。
+  validates :password, presence: true, length: { minimum: 6 }, allow_nil: true # パスワードが入力されていない場合検証をスルーして更新
   
   # 渡された文字列のハッシュ値を返す
   def User.digest(string)
@@ -35,8 +35,7 @@ class User < ApplicationRecord
   
   # トークンがダイジェストと一致すればtrueを返す
   def authenticated?(remeber_token)
-  　# ダイジェストが存在しない場合はfalseを返して終了
-  　return false if remember_digest.nil?
+  　return false if remember_digest.nil? # ダイジェストが存在しない場合はfalseを返して終了する
     BCrypt::Password.new(remember_digest).is_password?(remeber_token)
   end
   
