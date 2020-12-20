@@ -1,4 +1,5 @@
 class User < ApplicationRecord
+  has_many :attendances, dependent: :destroy # ユーザーが削除された場合、関連する勤怠データも同時に自動削除
   #「remember_token」という仮想の属性を作成する
   attr_accessor :remember_token
   before_save { self.email = email.downcase }
