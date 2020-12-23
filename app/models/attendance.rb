@@ -8,6 +8,6 @@ class Attendance < ApplicationRecord
   validate :finished_at_is_invalid_without_a_started_at # 存在性の検証などではvalidatesのようにsが入るが、今回のパターンだと不要
   
   def finished_at_is_invalid_without_a_started_at
-    errors.add(:started_at, "が必要です") if started_at.blank? && finished_at.present?
+    errors.add(:started_at, "が必要です") if started_at.blank? && finished_at.present? # 出勤時間がない、かつ退勤時間が存在する場合trueとなる
   end
 end
