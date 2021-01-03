@@ -18,11 +18,17 @@
       <td>氏名 : <%= @user.name %></td>
       <td>コード</td>
       <td></td>
-      <td>出勤日数</td>
+      <td>出勤日数 : <%= @worked_sum %>日</td>
       <td>月末日 : <%= l(@last_day, format: :short) %></td>
     </tr>
   </table>
 </div>
+
+
+<div class="btn-users-show">
+  <%= link_to "勤怠を編集", '#', class: "btn btn-primary" %>
+</div>
+
 
 <div>
   <table class="table table-bordered table-striped table-condensed" id="table-attendances">
@@ -50,16 +56,43 @@
         <tr>
           <td><%= l(day.worked_on, format: :short) %></td> <!-- l: 2つ目の引数にformat: :～と記述することでフォーマットを指定できる -->
           <td><%= $days_of_the_week[day.worked_on.wday] %></td> <!-- $= グローバル変数(プログラムのどこからでも呼び出せる）-->
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
+          <td><%= day.started_at.to_s(:hour) if day.started_at.present? %></td> <!-- @userに紐付くattendanceモデルのレコードにstarted_atが存在するか確認-->
+          <td><%= day.started_at.to_s(:min) if day.started_at.present? %></td>
+          <td>
+            <% if (Date.current == day.worked_on) && day.started_at.nil? %>
+              <%= link_to "出社", user_attendance_path(@user, day), method: :patch, class: "btn btn-primary btn-attendance" %>
+            <% end %>
+          </td>
+          <td><%= day.finished_at.to_s(:hour) if day.finished_at.present? %></td>
+          <td><%= day.finished_at.to_s(:min) if day.finished_at.present? %></td>
+          <td>
+            <% if (Date.current == day.worked_on) && day.started_at.present? && day.finished_at.nil? %> <!-- すべての条件がtrueである必要があるので&&演算子を使用してそれぞれの式を記述している-->
+              <%= link_to "退社", user_attendance_path(@user, day), method: :patch, class: "btn btn-primary btn-attendance" %>
+            <% end %>
+          </td>
+          <td>
+            <% if day.started_at.present? && day.finished_at.present? %>
+              <%= str_times = working_times(day.started_at, day.finished_at) %>
+              <% @total_working_times = @total_working_times.to_f + str_times.to_f %>
+            <% end %>
+          </td>
           <td></td>
         </tr>
       <% end %>
     </tbody>
+    
+    <tfood>
+      <tr>
+        <td colspan="2">累計日数</td>
+        <td colspan="6">総合勤務時間</td>
+        <td>累計在社時間</td>
+        <td rowspan="2"></td>
+      </tr>
+      <tr>
+        <td colspan="2"><%= @attendances.count %></td>
+        <td colspan="6"><%= format_basic_info(@user.work_time).to_f * @worked_sum %></td> <!-- to_fメソッドは文字列を浮動小数点数とみなしてFloatオブジェクトに変換する。to_iメソッドの小数点付きバージョン。-->
+        <td><%= format("%.2f", @total_working_times.to_f) %></td>
+      </tr>
+    </tfood>
   </table>
 </div>

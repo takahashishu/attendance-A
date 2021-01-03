@@ -2,7 +2,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   include SessionsHelper
   
-  $days_of_the_week = %w{日 月 火 水 木 金 土} # Rubyリテラル表記 ""の配列と同じように使用できる
+  $days_of_the_week = %w{日 月 火 水 木 金 土} # %w はRubyリテラル表記 ""の配列と同じように使用できる
  
  # ページ出力前に1ヶ月分のデータの存在を確認・セットします。
   def set_one_month 
