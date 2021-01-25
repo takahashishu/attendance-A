@@ -7,7 +7,11 @@ class UsersController < ApplicationController
   before_action :admin_or_correct_user, only: [:show, :edit]
   
   def index
-    @users = User.paginate(page: params[:page]).search(params[:search])
+    if params[:search].present? # パラメーターの中にsearchが存在するか？
+      @users = User.paginate(page: params[:page]).search(params[:search]) #Userモデルのパラメーターのページ一覧からsearchの中身を受け取る
+    else
+      @users = User.paginate(page: params[:page]) # search無しでユーザーページを受け取る
+    end
   end
   
   def new

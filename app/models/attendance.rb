@@ -6,8 +6,9 @@ class Attendance < ApplicationRecord
   
   # 出勤時間が存在しない場合、退勤時間は無効
   validate :finished_at_is_invalid_without_a_started_at # 存在性の検証などではvalidatesのようにsが入るが、今回のパターンだと不要　invalid=無効
+  
   # 退勤時間が存在しない場合、出勤時間は無効
-  validate :started_at_is_invalid_without_a_finished_at
+  validate :started_at_is_invalid_without_a_finished_at, on: :attendance_update # :onはアクションではなくコンテキストを指定する。今回の場合カスタムコンテキスト。
   
   # 出勤・退勤時間どちらも存在する時、出勤時間より早い退勤時間は無効
   validate :started_at_than_finished_at_fast_if_invalid

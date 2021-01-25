@@ -34,7 +34,8 @@ class AttendancesController < ApplicationController
     ActiveRecord::Base.transaction do # トランザクションを開始
       attendances_params.each do |id, item|
         attendance = Attendance.find(id)
-        attendance.update_attributes!(item) # 通常update_attributesの更新処理が失敗した場合はfalseが返されるが、! がついている場合falseではなく例外処理を返す
+        attendance.attributes = item # ここでオブジェクトのカラム全体を更新(この時点ではレコードに保存していない)
+        attendance.save!(context: :attendance_update) # ↑で更新した値をレコードに保存(同時にバリデーションを実行)。カスタムコンテキストはsaveにcontext: コンテキスト名を渡して明示する。! は例外処理を返す。
       end
     end
     flash[:success] = "1ヶ月分の勤怠情報を更新しました。"
