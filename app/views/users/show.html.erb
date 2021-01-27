@@ -65,15 +65,15 @@
         <tr>
           <td><%= l(day.worked_on, format: :short) %></td> <!-- l: 2つ目の引数にformat: :～と記述することでフォーマットを指定できる -->
           <td class="<%= css_class %>"><%= $days_of_the_week[day.worked_on.wday] %></td> 
-          <td><%= day.started_at.to_s(:hour) if day.started_at.present? %></td> <!-- @userに紐付くattendanceモデルのレコードにstarted_atが存在するか確認-->
-          <td><%= day.started_at.to_s(:min) if day.started_at.present? %></td>
+          <td><%= day.started_at.floor_to(15.minutes).to_s(:hour) if day.started_at.present? %></td> <!-- @userに紐付くattendanceモデルのレコードにstarted_atが存在するか確認-->
+          <td><%= day.started_at.floor_to(15.minutes).to_s(:min) if day.started_at.present? %></td>
           <td>
             <% if (Date.current == day.worked_on) && day.started_at.nil? %>
               <%= link_to "出社", user_attendance_path(@user, day), method: :patch, class: "btn btn-primary btn-attendance" %>
             <% end %>
           </td>
-          <td><%= day.finished_at.to_s(:hour) if day.finished_at.present? %></td>
-          <td><%= day.finished_at.to_s(:min) if day.finished_at.present? %></td>
+          <td><%= day.finished_at.floor_to(15.minutes).to_s(:hour) if day.finished_at.present? %></td> <!--to_sメソッドは文字列以外のオブジェクトを文字列に変換する。数字を文字列に変換したり小数を変換するのに使用する-->
+          <td><%= day.finished_at.floor_to(15.minutes).to_s(:min) if day.finished_at.present? %></td>
           <td>
             <% if (Date.current == day.worked_on) && day.started_at.present? && day.finished_at.nil? %> <!-- すべての条件がtrueである必要があるので&&演算子を使用してそれぞれの式を記述している-->
               <%= link_to "退社", user_attendance_path(@user, day), method: :patch, class: "btn btn-primary btn-attendance" %>
@@ -81,7 +81,7 @@
           </td>
           <td>
             <% if day.started_at.present? && day.finished_at.present? %>
-              <%= str_times = working_times(day.started_at, day.finished_at) %>
+              <%= str_times = working_times(day.started_at.floor_to(15.minutes), day.finished_at.floor_to(15.minutes)) %>
               <% @total_working_times = @total_working_times.to_f + str_times.to_f %>
             <% end %>
           </td>
