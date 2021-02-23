@@ -16,7 +16,7 @@ class ApplicationController < ActionController::Base
   def logged_in_user
     unless logged_in? # 条件式がfalseの場合実行
       store_location
-      flash[:danger] = "ログインしてください。"
+      flash[:danger] = "ログインして下さい。"
       redirect_to login_url
     end
   end
