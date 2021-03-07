@@ -11,11 +11,12 @@ Rails.application.routes.draw do
   
   
   resources :users do
-    member do
+    member do #　memberブロックをリソースブロックに追加することでリソースにルーティングが追加される
       get 'edit_basic_info'
       patch 'update_basic_info'
       get 'attendances/edit_one_month' # Usersリソースに含まれるように設定したが、attendancesと記述することによってこのようなルーティングの設定が可能となる
       patch 'attendances/update_one_month'
+      get 'overtime_application'
     end
     resources :attendances, only: :update # onlyを付けてupdateアクション以外のルーティングを制限する
   end
