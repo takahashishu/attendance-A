@@ -63,9 +63,6 @@ class UsersController < ApplicationController
     redirect_to users_url
   end
   
-  def overtime_application
-  end
-  
   private
 
     def user_params

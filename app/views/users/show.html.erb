@@ -77,7 +77,7 @@
         end
         %>
         <tr>
-          <td><%= link_to "残業申請", overtime_application_user_path(current_user), remote: true, class: "btn btn-primary" %></td>
+          <td><%= link_to "残業申請", attendances_edit_overwork_request_user_path(@user, day), remote: true, class: "btn btn-primary" %></td>
           <td><%= l(day.worked_on, format: :short) %></td> <!-- l: 2つ目の引数にformat: :～と記述することでフォーマットを指定できる -->
           <td class="<%= css_class %>"><%= $days_of_the_week[day.worked_on.wday] %></td> 
           <td><%= day.started_at.floor_to(15.minutes).to_s(:hour) if day.started_at.present? %></td> <!-- @userに紐付くattendanceモデルのレコードにstarted_atが存在するか確認-->
@@ -130,5 +130,5 @@
 </div>
 
 <!--モーダルウインドウ表示-->
-  <div id="overtime_application" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+  <div id="edit_overwork_request" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
   
