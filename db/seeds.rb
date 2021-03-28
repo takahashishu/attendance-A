@@ -15,7 +15,7 @@ User.create!(name: "上長A",
              password_confirmation: "password",
              department: "役員",
              employee_number: 0,
-             card_ID: 0)
+             card_ID: 0,)
              
 User.create!(name: "上長B",
              email: "sample2@email.com",
